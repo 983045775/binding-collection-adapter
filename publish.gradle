@@ -16,15 +16,14 @@ artifacts {
     archives androidJavadocsJar
 }
 
-if (project.hasProperty('sonatype.username') && project.hasProperty('bintray.username')) {
+def siteUrl = 'https://github.com/evant/binding-collection-adapter'
+def gitUrl = 'https://github.com/evantlemaddaluno/binding-collection-adapter.git'
 
-    signing {
-        sign configurations.archives
-    }
+signing {
+    sign configurations.archives
+}
 
-    def siteUrl = 'https://github.com/evant/binding-collection-adapter'
-    def gitUrl = 'https://github.com/evantlemaddaluno/binding-collection-adapter.git'
-
+if (project.hasProperty('sonatype.username')) {
     uploadArchives {
         repositories {
             mavenDeployer {
@@ -73,23 +72,22 @@ if (project.hasProperty('sonatype.username') && project.hasProperty('bintray.use
             }
         }
     }
-
-    if (project.hasProperty('bintray.username')) {
-        bintray {
-            user = project.property('bintray.username')
-            key = project.property('bintray.apikey')
-            configurations = ['archives']
-            pkg {
-                repo = 'maven'
-                name = 'binding-collection-adapter'
-                websiteUrl = siteUrl
-                vcsUrl = gitUrl
-                licenses = ["Apache-2.0"]
-                version {
-                    gpg {
-                        sign = true
-                        passphrase = project.getProperty('signing.password')
-                    }
+}
+if (project.hasProperty('bintray.username') && project.hasProperty('signing.password')) {
+    bintray {
+        user = project.property('bintray.username')
+        key = project.property('bintray.apikey')
+        configurations = ['archives']
+        pkg {
+            repo = 'maven'
+            name = 'binding-collection-adapter'
+            websiteUrl = siteUrl
+            vcsUrl = gitUrl
+            licenses = ["Apache-2.0"]
+            version {
+                gpg {
+                    sign = true
+                    passphrase = project.getProperty('signing.password')
                 }
             }
         }
